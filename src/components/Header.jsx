@@ -27,7 +27,7 @@ function pathMatchRoute(route) {
 }
     
   return (
-    <div className='bg-white border-b shadow-sm sticky top-0 z-50'>
+    <div className='bg-white border-b shadow-sm sticky top-0 z-40'>
         <header className='flex justify-between items-center px-3 max-w-6xl'>
         <div>
             <img src='https://t4.ftcdn.net/jpg/03/26/88/47/360_F_326884774_GjqQJF9yI0PhzQaGbxWIOYAv3k7oSW8Y.jpg'
