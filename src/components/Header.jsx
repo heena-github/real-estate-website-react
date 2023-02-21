@@ -1,25 +1,30 @@
+import { getAuth,onAuthStateChanged } from 'firebase/auth';
 import React from 'react';
-import { useLocation,useNavigate } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
+import { useLocation,useNavigate} from 'react-router-dom';
+import { useState,useEffect } from 'react';
 
 const Header = () => {
-
-    // const location = useLocation()
+    const [pageState, setPageState] = useState("Sign in");
+    const location = useLocation()
     const navigate=useNavigate()
-//    function pathMatchRoute(route){
-//     if(route === location.pathname){
-//         return true;
-//     }
-//    }
 
-   const navLinkStyles = ({isActive})=> {
-    return{
-    //   fontWeight:isActive ? 'bold' : 'normal',
-    //   textDecoration: isActive ? "none" : "underline"
-    color:isActive?'black':'grey',
-    borderBottom:isActive?' 3px solid blue':'grey'
+    const auth = getAuth();
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setPageState("Profile");
+      } else {
+        setPageState("Sign in");
+      }
+    });
+  }, [auth]);
+
+
+function pathMatchRoute(route) {
+    if (route === location.pathname) {
+      return true;
     }
-  }
+}
     
   return (
     <div className='bg-white border-b shadow-sm sticky top-0 z-50'>
@@ -30,37 +35,27 @@ const Header = () => {
         </div>
         <div>
             <ul className='flex space-x-10'>
-            <NavLink to={'/'} style={navLinkStyles}>
-            <li className={`cursor-pointer py-3 font-semibold`}>
-            Home
-            </li></NavLink>
-
-                {/* <li 
-                className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent
-                ${pathMatchRoute("/") && "text-black border-b-red-500"}`}
+           
+                <li 
+                className={`cursor-pointer py-3 font-semibold text-gray-400 
+                ${pathMatchRoute("/") && "text-gray-900 border-b-[3px] border-b-blue-700"}`}
                 onClick={()=>navigate("/")}>
                 Home
-                </li> */}
+                </li>
 
-            <NavLink to={'/offers'} style={navLinkStyles}>
-            <li className={`cursor-pointer py-3 font-semibold`} >
-            offers
-            </li></NavLink>
-                {/* <li className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent
-                ${pathMatchRoute("/offers") && "text-black border-b-red-500"}`}
+                <li className={`cursor-pointer py-3 font-semibold text-gray-400
+                ${pathMatchRoute("/offers") && "text-gray-900 border-b-[3px] border-b-blue-700"}`}
                 onClick={()=>navigate("/offers")}>
                 Offers
-                </li> */}
-
-            <NavLink to={'/sign-in'} style={navLinkStyles}>
-            <li className={`cursor-pointer py-3 font-semibold`}>
-            sign-in
-            </li></NavLink>
-                {/* <li className={`cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent
-                ${pathMatchRoute("/sign-in") && "text-black border-b-red-500"}`}
-                onClick={()=>navigate("/sign-in")}>
-                Sign in
-                </li> */}
+                </li>
+             
+                <li className={`cursor-pointer py-3 font-semibold text-gray-400 ${
+                (pathMatchRoute("/sign-in") || pathMatchRoute("/profile")) && 'border-b-[3px] border-b-blue-700 text-gray-900'
+              }`}
+              onClick={() => navigate("/profile")}
+            >
+              {pageState}
+            </li>
             </ul>
         </div>
         </header>
