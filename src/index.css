@@ -4,7 +4,10 @@
 
 body{
     /* background-color: rgb(200, 241, 213); */
-    background-color: rgb(222, 248, 230);
+    /* background-color: rgb(222, 248, 230); */
+    /* background-color:#c5bdbd; */
+    /* background-color:rgb(48, 32, 32); */
+    background-color:#fafafa;
 }
 
 .swiper-button-next:after,

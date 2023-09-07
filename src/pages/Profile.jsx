@@ -1,5 +1,5 @@
 import { getAuth, updateProfile } from 'firebase/auth'
-import { collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc, where,onSnapshot } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import { FcHome } from "react-icons/fc";
 import { Link } from 'react-router-dom';
 import ListingItem from '../components/ListingItem';
 
+import 'firebase/firestore';
 
 
 const Profile = () => {
@@ -16,12 +17,19 @@ const Profile = () => {
   const [listings,setListings] = useState(null)
   const [loading,setLoading] = useState(true)
   const [changeDetails,setChangeDetails] = useState(false)
+
+  const [buttonVisible, setButtonVisible] = useState(true);
+
+  
+  
   const [formData,setFormData] = useState({
     name: auth.currentUser.displayName,
-    email: auth.currentUser.email
+    email: auth.currentUser.email,
+   
   })
 
   const {name,email} = formData
+  // console.log(formData)
   function onLogout(){
     auth.signOut();
     navigate('/')
@@ -33,6 +41,117 @@ const Profile = () => {
       [e.target.id]:e.target.value
     }))
   }
+
+
+  useEffect(() => {
+    // const userId =auth.currentUser.uid;
+    // const db = firestore();
+    // const userRef =collection(db,'users').doc(userId);
+    const docRef = doc(db, "users", auth.currentUser.uid);
+
+    const unsubscribe = onSnapshot(docRef, (doc) => {
+      if (doc.exists) {
+        const role = doc.data().role;
+        if (role === 'buyer') {
+          // The user's role is "buyer"
+          // Hide the button
+          setButtonVisible(false);
+        } else {
+          // The user's role is not "buyer"
+          // Show the button
+          setButtonVisible(true);
+        }
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [auth]);
+
+
+  // useEffect(()=>{
+  //   async function fetchUser(){
+     
+  //     const listingRef = collection(db,'users');
+  //     const q = query(
+  //       listingRef,
+  //       where('role','==','buyer'),
+      
+  //     );
+  //     const querySnap = await getDocs(q);
+  //     let userlistings = [];
+  //     querySnap.forEach((doc)=>{
+  //       return userlistings.push({
+  //         id: doc.id,
+  //         data: doc.data(),
+  //       })
+  //     })
+  //     setUsers(userlistings)
+  //     console.log(userlistings)
+  //     setLoading(false)
+  //   }
+  //   fetchUser();
+  // },[])
+
+  // console.log(auth.currentUser.)
+  // if(users.data.role == 'buyer'){
+  //   setShowButton(false)
+  // }
+  // useEffect(()=>{
+  //   async function showButton(){
+  //     const collectionRef = collection(db,"users")
+  //   const buttonQuery = query(collectionRef,where('role' , '==' , 'owner'))
+   
+  //   if(buttonQuery){
+  //   setShowButton(true)
+  //   }
+  //   else{
+  //     setShowButton(false)
+  //   }
+  // }
+  // showButton();
+  // },[])
+  // useEffect(()=>{
+  //   const allUserRef = collection('users');
+  //   const docRef = doc(auth.currentUser())
+  
+  //   // const q = query(
+  //   //   allUserRef,
+  //   //   where('role','==',(users?.role   ))
+  //   // );
+    
+  // },[])
+  // useEffect(()=>{
+  //   async function showSellButton(){
+     
+  //     const listingRef = collection(db,'users');
+  //     const q = query(
+  //       listingRef,
+  //       where('role','==','buyer')
+  //     );
+  //     const querySnap = await getDocs(q);
+  //     // console.log(querySnap)
+  //     // let listings = [];
+  //     querySnap.
+  //      querySnap.forEach((doc)=>{
+  //       // return listings.push({
+  //       //   id: doc.id,
+  //       //   data: doc.data(),
+  //       // })
+  //         // return console.log(doc.data().role)
+  //       if(doc.data().role='buyer'){
+  //         console.log('bsnl')
+  //        return setShowButton(true)
+  //        }
+  //     })
+      
+   
+  //     // setLoading(false)
+  //   }
+  //   // fetchUserListings();
+  //   showSellButton()
+  // },[])
+
 
   async function onSubmit(){
     try {
@@ -74,6 +193,7 @@ const Profile = () => {
         })
       })
       setListings(listings)
+      // console.log(listings)
       setLoading(false)
     }
     fetchUserListings();
@@ -122,6 +242,14 @@ const Profile = () => {
               className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out"
             />
 
+{/* <input
+              type="text"
+              id="role"
+              value={role}
+              disabled
+              className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out"
+            /> */}
+
             <div className="flex justify-between whitespace-nowrap text-sm sm:text-lg mb-6">
               <p className="flex items-center ">
                 Do you want to change your name?
@@ -143,6 +271,7 @@ const Profile = () => {
             </div>
           </form>
           
+          {buttonVisible && (
           <button type='button' className="w-full bg-blue-600 text-white uppercase px-7 py-3 text-sm 
           font-medium rounded shadow-md hover:bg-blue-700 
           transition duration-150 ease-in-out hover:shadow-lg active:bg-blue-800">
@@ -151,7 +280,7 @@ const Profile = () => {
                 Sell or Rent Your Home
             </Link>
           </button>
-
+          )}
         </div>
       </section>
 

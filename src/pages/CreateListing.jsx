@@ -161,6 +161,8 @@ const CreateListing = () => {
       setLoading(false);
       toast.success('Listing Successfully Created')
       navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+
+     
     }
     if(loading){
         return <Spinner/>

@@ -16,8 +16,9 @@ const Signup = () => {
       name: "",
       email: "",
       password: "",
+      role:""
     });
-    const { name,email, password } = formData;
+    const { name,email, password, role} = formData;
     const navigate = useNavigate()
 
     function onChange(e) {
@@ -72,6 +73,16 @@ const Signup = () => {
               placeholder="Full name"
               className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
             />
+
+             <input
+              type="text"
+              id="role"
+              value={role}
+              onChange={onChange}
+              placeholder="owner or buyer"
+              className="mb-6 w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
+            />
+
             <input
               type="email"
               id="email"

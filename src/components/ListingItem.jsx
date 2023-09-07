@@ -7,13 +7,13 @@ import {MdEdit} from 'react-icons/md'
 
 const ListingItem = ({listing,id,onEdit,onDelete}) => {
   return (
-    <li className='relative bg-white flex flex-col justify-between items-center shadow-md 
-    hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-150 m-[10px]'>
+    <li className='relative bg-white flex flex-col justify-between items-center shadow-xl 
+    hover:shadow-2xl rounded-md overflow-hidden transition-shadow duration-150 m-[10px]'>
         <Link to={`/category/${listing.type}/${id}`} className='contents'>
          <img className='h-[170px] w-full object-cover hover:scale-105
           transition-scale duration-200 ease-in'
           loading='lazy' src={listing.imgUrls[0]} alt=''/>
-         <Moment className='absolute top-2 left-2 bg-[#3377cc] text-white uppercase
+         <Moment className='absolute top-2 left-2 bg-[#cd853f] text-white uppercase
          text-xs font-semibold rounded-md px-2 py-1 shadow-lg' fromNow>
             {listing.timestamp?.toDate() }
          </Moment>

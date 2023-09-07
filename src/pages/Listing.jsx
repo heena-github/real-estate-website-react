@@ -134,7 +134,7 @@ const Listing = () => {
               {listing.furnished ? "Furnished" : "Not furnished"}
             </li>
           </ul>
-           {listing.userRef !== auth.currentUser?.uid && !contactLandlord && (
+           {listing.userRef !== auth.currentUser?.uid && !contactLandlord && auth.currentUser && (
                       
             <div className="mt-6">
               <button
